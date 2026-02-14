@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vinyl 💿</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:radial-gradient(circle,#111,#000 70%);
+  overflow:hidden;
+  font-family:Segoe UI, sans-serif;
+  color:white;
+  text-align:center;
+}
+
+/* Glow background */
+.glow{
+  position:absolute;
+  width:90vw;
+  height:90vw;
+  max-width:500px;
+  max-height:500px;
+  background:radial-gradient(circle,
+    rgba(255,105,180,0.4),
+    transparent 70%);
+  border-radius:50%;
+  filter:blur(70px);
+  z-index:-1;
+}
+
+/* Scene zoom nhẹ */
+.scene{
+  animation:zoom 10s ease forwards 3s;
+}
+
+@keyframes zoom{
+  from{transform:scale(1);}
+  to{transform:scale(1.05);}
+}
+
+/* Đĩa nhạc */
+.record img{
+  width:65vw;
+  max-width:300px;
+  animation:spin 5s linear infinite;
+  transition:0.3s;
+}
+
+/* Xoay */
+@keyframes spin{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+}
+
+/* Message */
+.name{
+  margin-top:40px;
+  font-size:5vw;
+  min-height:50px;
+  text-shadow:0 0 15px rgba(255,105,180,0.8);
+}
+
+/* Gradient text */
+#message{
+  background: linear-gradient(90deg,#ffc1da,#ff1493,#ffc1da);
+  background-clip:text;
+  -webkit-background-clip:text;
+  color:transparent;
+  -webkit-text-fill-color:transparent;
+}
+
+/* Cursor */
+#message::after{
+  content:"|";
+  animation:blink 1s infinite;
+}
+
+@keyframes blink{
+  0%,50%,100%{opacity:1;}
+  25%,75%{opacity:0;}
+}
+
+/* Nút nhạc */
+.music-control{
+  margin-top:25px;
+}
+
+#musicBtn{
+  padding:12px 25px;
+  font-size:4vw;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+  background:linear-gradient(90deg,#ff69b4,#ff1493);
+  color:white;
+  box-shadow:0 0 15px rgba(255,105,180,0.6);
+  transition:0.3s;
+}
+
+#musicBtn:active{
+  transform:scale(0.95);
+}
+</style>
+</head>
+
+<body>
+
+<div class="glow"></div>
+
+<div class="scene">
+
+<div class="record">
+  <img id="recordImg" src="record.png" alt="Vinyl">
+</div>
+
+<div class="name">
+  <span id="message"></span>
+</div>
+
+<div class="music-control">
+  <button id="musicBtn">🎵 Phát nhạc</button>
+</div>
+
+</div>
+
+<audio id="bgMusic" src="music.mp3"></audio>
+
+<script>
+const text = "I'll Be There";
+const speed = 50;
+let i = 0;
+
+const message = document.getElementById("message");
+const music = document.getElementById("bgMusic");
+const btn = document.getElementById("musicBtn");
+const record = document.getElementById("recordImg");
+
+/* Gõ chữ */
+function typeWriter(){
+  if(i < text.length){
+    message.innerHTML += text.charAt(i);
+    i++;
+    setTimeout(typeWriter, speed);
+  }
+}
+
+/* Điều khiển nhạc */
+btn.addEventListener("click", function(){
+  if(music.paused){
+    music.play();
+    record.style.animationPlayState = "running";
+    btn.innerHTML = "⏸ Tạm dừng";
+  }else{
+    music.pause();
+    record.style.animationPlayState = "paused";
+    btn.innerHTML = "🎵";
+  }
+});
+
+/* Khi load */
+window.onload = function(){
+  music.volume = 0.6;
+  record.style.animationPlayState = "paused"; 
+  setTimeout(typeWriter, 2000);
+}
+</script>
+
+</body>
+</html>
